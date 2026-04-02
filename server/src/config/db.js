@@ -15,7 +15,7 @@ const pool = new Pool({
 
 // Test Connection
 pool.on("connect", () => {
-  console.log("PostgreSQL databse connected successfully");
+  console.log("PostgreSQL database connected successfully");
 });
 
 pool.on("error", (err) => {
@@ -26,18 +26,23 @@ pool.on("error", (err) => {
 // Query Helper
 const query = async (text, params) => {
   const start = Date.now();
-  const res = await pool.query(text, params);
-  const duration = Date.now() - start;
+  try {
+    const res = await pool.query(text, params);
+    const duration = Date.now() - start;
 
-  if (process.env.NODE_ENV === "development") {
-    console.log("Query executed:", {
-      text,
-      duration: `${duration}ms`,
-      rows: res.rowCount,
-    });
+    if (process.env.NODE_ENV === "development") {
+      console.log("Query executed:", {
+        text,
+        duration: `${duration}ms`,
+        rows: res.rowCount,
+      });
+    }
+
+    return res;
+  } catch (error) {
+    console.error("Database query error:", error.message);
+    throw error;
   }
-
-  return res;
 };
 
 // Transaction Helper
