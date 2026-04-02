@@ -4,7 +4,7 @@ import helmet from "helmet";
 import rateLimit from "express-rate-limit";
 import fileUpload from "express-fileupload";
 import errorMiddleware from "./middlewares/error.middleware.js";
-
+import authRoutes from "./routes/auth.routes.js";
 
 const app = express();
 
@@ -56,6 +56,9 @@ app.get("/api/health", (req, res) => {
     timestamp: new Date().toISOString(),
   });
 });
+
+// Routes
+app.use("/api/v1/auth", authRoutes)
 
 // API Routes
 app.use((req, res) => {
