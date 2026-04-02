@@ -4,9 +4,10 @@ import authService from "../services/auth.service.js";
 
 // Cookie options
 const cookieOptions = {
-  httpOnly: true,
-  secure: process.env.NODE_ENV === "production",
-  sameSite: "strict",
+  httpOnly: true,                                    
+  secure: process.env.NODE_ENV === "production",     
+  sameSite: "strict",                               
+  maxAge: 7 * 24 * 60 * 60 * 1000,                  
 };
 
 // Register
@@ -41,7 +42,7 @@ export const getMe = asyncHandler(async (req, res) => {
 // Logout
 export const logout = asyncHandler(async (req, res) => {
   res
-    .clearCookie("token")
     .status(200)
+    .clearCookie("token", cookieOptions)   
     .json(new ApiResponse(200, "Logged out successfully", null));
 });

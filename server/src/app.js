@@ -3,6 +3,7 @@ import cors from "cors";
 import helmet from "helmet";
 import rateLimit from "express-rate-limit";
 import fileUpload from "express-fileupload";
+import cookieParser from "cookie-parser";
 import errorMiddleware from "./middlewares/error.middleware.js";
 import authRoutes from "./routes/auth.routes.js";
 
@@ -35,6 +36,9 @@ app.use("/api", limiter);
 // Body Parsers 
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true, limit: "10mb" }));
+
+//Cookie Parsers
+app.use(cookieParser());
 
 // File Upload
 app.use(
