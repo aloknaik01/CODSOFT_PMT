@@ -3,6 +3,8 @@ import cors from "cors";
 import helmet from "helmet";
 import rateLimit from "express-rate-limit";
 import fileUpload from "express-fileupload";
+import errorMiddleware from "./middlewares/error.middleware.js";
+
 
 const app = express();
 
@@ -71,5 +73,10 @@ app.use((err, req, res, next) => {
     message: err.message || "Internal Server Error",
   });
 });
+
+
+//Global Error Handler 
+app.use(errorMiddleware);
+
 
 export default app;
