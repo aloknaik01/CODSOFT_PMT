@@ -7,6 +7,8 @@ import cookieParser from "cookie-parser";
 import errorMiddleware from "./middlewares/error.middleware.js";
 import authRoutes from "./routes/auth.routes.js";
 import userRoutes from "./routes/user.routes.js";
+import projectRoutes from "./routes/project.routes.js";
+
 
 
 const app = express();
@@ -65,8 +67,8 @@ app.get("/api/health", (req, res) => {
 
 // Routes
 app.use("/api/v1/auth", authRoutes)
-
 app.use("/api/v1/users", userRoutes);
+app.use("/api/v1/projects", projectRoutes);
 
 // API Routes
 app.use((req, res) => {
