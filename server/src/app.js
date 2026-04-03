@@ -6,6 +6,8 @@ import fileUpload from "express-fileupload";
 import cookieParser from "cookie-parser";
 import errorMiddleware from "./middlewares/error.middleware.js";
 import authRoutes from "./routes/auth.routes.js";
+import userRoutes from "./routes/user.routes.js";
+
 
 const app = express();
 
