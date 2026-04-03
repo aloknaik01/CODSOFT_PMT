@@ -2,94 +2,113 @@ import asyncHandler from "../utils/asyncHandler.js";
 import ApiResponse from "../utils/ApiResponse.js";
 import taskService from "../services/task.service.js";
 
-//   GET /api/projects/:projectId/tasks      
-export const getTasksByProject = asyncHandler(async (req, res) => {
-  const tasks = await taskService.getTasksByProject(
-    req.params.projectId,
-    req.user.id
-  );
+// helper to extract params cleanly
+const getParams = (req) => ({
+  projectId: req.params.projectId,
+  taskId: req.params.taskId,
+  userId: req.user.id,
+});
 
-  res
+
+// GET tasks by project
+export const getTasksByProject = asyncHandler(async (req, res) => {
+  const { projectId, userId } = getParams(req);
+
+  const tasks = await taskService.getTasksByProject(projectId, userId);
+
+  return res
     .status(200)
     .json(new ApiResponse(200, "Tasks fetched", tasks));
 });
 
-//   GET /api/projects/:projectId/tasks/:taskId  
-export const getTaskById = asyncHandler(async (req, res) => {
-  const task = await taskService.getTaskById(
-    req.params.taskId,
-    req.params.projectId,
-    req.user.id
-  );
 
-  res
+// GET single task
+export const getTaskById = asyncHandler(async (req, res) => {
+  const { projectId, taskId, userId } = getParams(req);
+
+  const task = await taskService.getTaskById(taskId, projectId, userId);
+
+  return res
     .status(200)
     .json(new ApiResponse(200, "Task fetched", task));
 });
 
-//   POST /api/projects/:projectId/tasks      
+
+// CREATE task
 export const createTask = asyncHandler(async (req, res) => {
+  const { projectId, userId } = getParams(req);
+
   const task = await taskService.createTask(
-    req.params.projectId,
-    req.user.id,
+    projectId,
+    userId,
     req.body
   );
 
-  res
+  return res
     .status(201)
     .json(new ApiResponse(201, "Task created", task));
 });
 
-//   PATCH /api/projects/:projectId/tasks/:taskId   
+
+// UPDATE task
 export const updateTask = asyncHandler(async (req, res) => {
+  const { projectId, taskId, userId } = getParams(req);
+
   const task = await taskService.updateTask(
-    req.params.taskId,
-    req.params.projectId,
-    req.user.id,
+    taskId,
+    projectId,
+    userId,
     req.body
   );
 
-  res
+  return res
     .status(200)
     .json(new ApiResponse(200, "Task updated", task));
 });
 
-//   PATCH /api/projects/:projectId/tasks/:taskId/status
+
+// UPDATE status (Kanban)
 export const updateTaskStatus = asyncHandler(async (req, res) => {
+  const { projectId, taskId, userId } = getParams(req);
+
+  const { status } = req.body;
+
   const task = await taskService.updateTaskStatus(
-    req.params.taskId,
-    req.params.projectId,
-    req.user.id,
-    req.body.status
+    taskId,
+    projectId,
+    userId,
+    status
   );
 
-  res
+  return res
     .status(200)
     .json(new ApiResponse(200, "Task status updated", task));
 });
 
-//   PATCH /api/projects/:projectId/tasks/reorder   
+
+// REORDER tasks
 export const reorderTasks = asyncHandler(async (req, res) => {
+  const { projectId, userId } = getParams(req);
+
   await taskService.reorderTasks(
-    req.params.projectId,
-    req.user.id,
+    projectId,
+    userId,
     req.body.tasks
   );
 
-  res
+  return res
     .status(200)
     .json(new ApiResponse(200, "Tasks reordered", null));
 });
 
-//   DELETE /api/projects/:projectId/tasks/:taskId  ─
-export const deleteTask = asyncHandler(async (req, res) => {
-  await taskService.deleteTask(
-    req.params.taskId,
-    req.params.projectId,
-    req.user.id
-  );
 
-  res
+// DELETE task
+export const deleteTask = asyncHandler(async (req, res) => {
+  const { projectId, taskId, userId } = getParams(req);
+
+  await taskService.deleteTask(taskId, projectId, userId);
+
+  return res
     .status(200)
     .json(new ApiResponse(200, "Task deleted", null));
 });
