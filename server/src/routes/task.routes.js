@@ -22,12 +22,12 @@ const router = Router({ mergeParams: true });
 
 router.use(protect);
 
-router.get("/",                   getTasksByProject);
-router.post("/",                  validate(createTaskSchema),   createTask);
-router.patch("/reorder",          validate(reorderTasksSchema), reorderTasks);
-router.get("/:taskId",            getTaskById);
-router.patch("/:taskId",          validate(updateTaskSchema),   updateTask);
-router.patch("/:taskId/status",   validate(updateStatusSchema), updateTaskStatus);
-router.delete("/:taskId",         deleteTask);
+router.get("/", getTasksByProject);
+router.post("/",  validate(createTaskSchema),   createTask);
+router.patch("/reorder", validate(reorderTasksSchema), reorderTasks);
+router.get("/:taskId",  getTaskById);
+router.patch("/:taskId",  validate(updateTaskSchema),   updateTask);
+router.patch("/:taskId/status", validate(updateStatusSchema), updateTaskStatus);
+router.delete("/:taskId",  deleteTask);
 
 export default router;
