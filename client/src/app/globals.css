@@ -1,3 +1,92 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+ /* Google Fonts */
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap");
+
+/* CSS Variables — dark theme */
+:root {
+  --bg-primary:    #0F172A;   /* slate-900 — page background              */
+  --bg-secondary:  #1E293B;   /* slate-800 — cards, modals                */
+  --bg-tertiary:   #293548;   /* slate-750 — inputs, hover states         */
+  --accent:        #6366F1;   /* indigo-500 — primary brand               */
+  --accent-hover:  #4F46E5;   /* indigo-600 — hover on accent elements    */
+  --accent-light:  #818CF8;   /* indigo-400 — labels, secondary accent    */
+  --text-primary:  #F1F5F9;   /* slate-100 — headings, important text     */
+  --text-secondary:#94A3B8;   /* slate-400 — body text, descriptions      */
+  --text-muted:    #475569;   /* slate-600 — placeholders, timestamps     */
+  --border-color:  #334155;   /* slate-700 — all borders                  */
+  --success:       #10B981;   /* emerald-500                              */
+  --warning:       #F59E0B;   /* amber-500                                */
+  --danger:        #EF4444;   /* red-500                                  */
+}
+
+/*  Reset  */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin:  0;
+  padding: 0;
+}
+
+/*  Base  */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: "Inter", system-ui, sans-serif;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  line-height: 1.6;
+}
+
+/* ─ Custom Scrollbar (webkit)  */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-primary);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-secondary);
+}
+
+/* Firefox scrollbar */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-color) var(--bg-primary);
+}
+
+/*  Focus ring  accessibility  */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/*  Utility: hide scrollbar but keep scroll behaviour  */
+.no-scrollbar {
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/*  Utility: full-page centered layout (used by auth pages)  */
+.auth-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--bg-primary);
+}
