@@ -61,6 +61,34 @@ const validateAssignee = async (projectId, assigneeId) => {
 
 
 // ─────────────────────────────────────────────
+// Normalize task for frontend
+const normalizeTask = async (task) => {
+  if (!task) return null;
+  
+  // Fetch assignee info if it's a flat row
+  let assignee = null;
+  if (task.assignee_id) {
+    const { rows } = await query(
+      "SELECT name, avatar_url FROM users WHERE id = $1",
+      [task.assignee_id]
+    );
+    if (rows.length) {
+      assignee = {
+        id: task.assignee_id,
+        name: rows[0].name,
+        avatar: rows[0].avatar_url
+      };
+    }
+  }
+
+  return {
+    ...task,
+    tags: [],
+    comments: 0,
+    assignee
+  };
+};
+
 // Services
 // ─────────────────────────────────────────────
 
@@ -70,8 +98,7 @@ const getTasksByProject = async (projectId, userId) => {
 
   const { rows } = await query(
     `SELECT
-       t.id, t.title, t.status, t.priority, t.position,
-       t.due_date, t.created_at,
+       t.*,
        u.name AS assignee_name,
        u.avatar_url AS assignee_avatar
      FROM tasks t
@@ -81,7 +108,16 @@ const getTasksByProject = async (projectId, userId) => {
     [projectId]
   );
 
-  return rows;
+  return rows.map(r => ({
+    ...r,
+    tags: [], // Not implemented in DB yet, but prevents crash
+    comments: 0, // Not implemented in DB yet
+    assignee: r.assignee_id ? {
+      id: r.assignee_id,
+      name: r.assignee_name,
+      avatar: r.assignee_avatar
+    } : null
+  }));
 };
 
 // Get single task
@@ -91,21 +127,37 @@ const getTaskById = async (taskId, projectId, userId) => {
   const { rows } = await query(
     `SELECT
        t.*,
-       u.name AS assignee_name,
-       c.name AS created_by_name,
+       u.id AS assignee_uid, u.name AS assignee_name, u.email AS assignee_email, u.avatar_url AS assignee_avatar,
+       c.id AS reporter_uid, c.name AS reporter_name, c.email AS reporter_email, c.avatar_url AS reporter_avatar,
        COALESCE(JSON_AGG(a.*) FILTER (WHERE a.id IS NOT NULL), '[]') AS attachments
      FROM tasks t
      LEFT JOIN users u ON u.id = t.assignee_id
      LEFT JOIN users c ON c.id = t.created_by
      LEFT JOIN attachments a ON a.task_id = t.id
      WHERE t.id = $1 AND t.project_id = $2
-     GROUP BY t.id, u.name, c.name`,
+     GROUP BY t.id, u.id, u.name, u.email, u.avatar_url, c.id, c.name, c.email, c.avatar_url`,
     [taskId, projectId]
   );
 
   if (!rows.length) throw new ApiError(404, "Task not found");
 
-  return rows[0];
+  const r = rows[0];
+  return {
+    ...r,
+    tags: [],
+    assignee: r.assignee_uid ? {
+      id: r.assignee_uid,
+      name: r.assignee_name,
+      email: r.assignee_email,
+      avatar: r.assignee_avatar
+    } : null,
+    reporter: r.reporter_uid ? {
+      id: r.reporter_uid,
+      name: r.reporter_name,
+      email: r.reporter_email,
+      avatar: r.reporter_avatar
+    } : null
+  };
 };
 
 // Create task
@@ -135,7 +187,7 @@ const createTask = async (projectId, userId, data) => {
     ]
   );
 
-  return rows[0];
+  return normalizeTask(rows[0]);
 };
 
 // Update task
@@ -164,7 +216,7 @@ const updateTask = async (taskId, projectId, userId, updates) => {
     ]
   );
 
-  return rows[0];
+  return normalizeTask(rows[0]);
 };
 
 // Update status (Kanban move)
@@ -184,7 +236,7 @@ const updateTaskStatus = async (taskId, projectId, userId, status) => {
     [status, position, taskId, projectId]
   );
 
-  return rows[0];
+  return normalizeTask(rows[0]);
 };
 
 // Reorder tasks (optimized 🚀)

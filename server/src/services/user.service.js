@@ -114,9 +114,50 @@ const searchUsers = async (searchTerm, currentUserId) => {
   return rows;
 };
 
+// Get all users
+const getAllUsers = async () => {
+  const { rows } = await query(
+    `SELECT 
+       u.id, u.name, u.email, u.avatar_url, u.created_at,
+       (SELECT COUNT(*) FROM project_members pm WHERE pm.user_id = u.id) as project_count,
+       (SELECT COUNT(*) FROM tasks t WHERE t.assignee_id = u.id) as task_count
+     FROM users u
+     ORDER BY u.name ASC`
+  );
+
+  return rows;
+};
+
+// Delete user
+const deleteUser = async (userId) => {
+  // 1. Get avatar public ID for cleanup
+  const { rows } = await query(
+    "SELECT avatar_public_id FROM users WHERE id = $1",
+    [userId]
+  );
+
+  const user = rows[0];
+  if (!user) {
+    throw new ApiError(404, "User not found");
+  }
+
+  // 2. Delete from DB (foreign keys should cascade or be handled)
+  // Assuming cascade is set up in migrations, otherwise we'd need to cleanup projects/tasks
+  await query("DELETE FROM users WHERE id = $1", [userId]);
+
+  // 3. Cleanup Cloudinary
+  if (user.avatar_public_id) {
+    await deleteFromCloudinary(user.avatar_public_id).catch(() => {});
+  }
+
+  return true;
+};
+
 export default {
   getUserById,
   updateProfile,
   updateAvatar,
   searchUsers,
+  getAllUsers,
+  deleteUser,
 };

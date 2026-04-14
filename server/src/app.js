@@ -9,6 +9,7 @@ import authRoutes from "./routes/auth.routes.js";
 import userRoutes from "./routes/user.routes.js";
 import projectRoutes from "./routes/project.routes.js";
 import taskRoutes from "./routes/task.routes.js";
+import dashboardRoutes from "./routes/dashboard.routes.js";
 
 
 const app = express();
@@ -18,7 +19,7 @@ app.use(helmet());
 
 app.use(
   cors({
-    origin: process.env.CLIENT_URL || "http://localhost:5173",
+    origin: "http://localhost:5173",
     credentials: true,
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
@@ -69,7 +70,8 @@ app.get("/api/health", (req, res) => {
 app.use("/api/v1/auth", authRoutes)
 app.use("/api/v1/users", userRoutes);
 app.use("/api/v1/projects", projectRoutes);
-app.use("/api/v1/projects/:projectId/tasks",       taskRoutes); 
+app.use("/api/v1/projects/:projectId/tasks", taskRoutes);
+app.use("/api/v1/dashboard", dashboardRoutes);
 
 // API Routes
 app.use((req, res) => {
@@ -79,14 +81,6 @@ app.use((req, res) => {
   });
 });
 
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-
-  res.status(err.status || 500).json({
-    success: false,
-    message: err.message || "Internal Server Error",
-  });
-});
 
 
 //Global Error Handler 

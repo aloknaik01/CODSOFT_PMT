@@ -71,3 +71,28 @@ export const searchUsers = asyncHandler(async (req, res) => {
     .status(200)
     .json(new ApiResponse(200, "Users found", users));
 });
+
+// Get all users
+export const getAllUsers = asyncHandler(async (req, res) => {
+  const users = await userService.getAllUsers();
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, "All users fetched", users));
+});
+
+// Delete account
+export const deleteProfile = asyncHandler(async (req, res) => {
+  await userService.deleteUser(req.user.id);
+
+  // logout effectively by clearing cookie if we use them
+  res.clearCookie("token", {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "strict",
+  });
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, "Account permanently deleted"));
+});

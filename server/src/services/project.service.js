@@ -50,17 +50,17 @@ const getProjectById = async (projectId, userId) => {
 };
 
 // Create project (transaction safe)
-const createProject = async (userId, { title, description, due_date }) => {
+const createProject = async (userId, { title, description, due_date, color: _color }) => {
   const client = await getClient();
 
   try {
     await client.query("BEGIN");
 
     const { rows } = await client.query(
-      `INSERT INTO projects (title, description, due_date, owner_id)
-       VALUES ($1, $2, $3, $4)
+      `INSERT INTO projects (title, description, due_date, color, owner_id)
+       VALUES ($1, $2, $3, $4, $5)
        RETURNING *`,
-      [title, description ?? null, due_date ?? null, userId]
+      [title, description ?? null, due_date ?? null, _color ?? '#8b5cf6', userId]
     );
 
     const project = rows[0];
@@ -85,9 +85,8 @@ const createProject = async (userId, { title, description, due_date }) => {
 const updateProject = async (projectId, userId, updates) => {
   await checkOwner(projectId, userId);
 
-  const { title, description, status, due_date } = updates;
-
-  if (!title && !description && !status && !due_date) {
+  const { title, description, status, due_date, color } = updates;
+  if (!title && !description && !status && !due_date && !color) {
     throw new ApiError(400, "Nothing to update");
   }
 
@@ -98,10 +97,11 @@ const updateProject = async (projectId, userId, updates) => {
        description = COALESCE($2, description),
        status      = COALESCE($3, status),
        due_date    = COALESCE($4, due_date),
+       color       = COALESCE($5, color),
        updated_at  = NOW()
-     WHERE id = $5
+     WHERE id = $6
      RETURNING *`,
-    [title ?? null, description ?? null, status ?? null, due_date ?? null, projectId]
+    [title ?? null, description ?? null, status ?? null, due_date ?? null, color ?? null, projectId]
   );
 
   if (!rows[0]) throw new ApiError(404, "Project not found");
@@ -140,21 +140,38 @@ const getMembers = async (projectId, userId) => {
 };
 
 // Add member
-const addMember = async (projectId, userId, { user_id, role }) => {
+const addMember = async (projectId, userId, { user_id, email, role }) => {
   await checkOwner(projectId, userId);
 
-  if (user_id === userId) {
+  // Resolve email → user_id if caller passed email instead of user_id
+  let targetUserId = user_id;
+  if (!targetUserId && email) {
+    const { rows: userRows } = await query(
+      "SELECT id FROM users WHERE email = $1",
+      [email.toLowerCase().trim()]
+    );
+    if (!userRows.length) {
+      throw new ApiError(404, "No account found with that email address");
+    }
+    targetUserId = userRows[0].id;
+  }
+
+  if (!targetUserId) {
+    throw new ApiError(400, "Provide either user_id or email");
+  }
+
+  if (targetUserId === userId) {
     throw new ApiError(400, "You are already a member");
   }
 
-  const userExists = await query("SELECT 1 FROM users WHERE id = $1", [user_id]);
+  const userExists = await query("SELECT 1 FROM users WHERE id = $1", [targetUserId]);
   if (!userExists.rows.length) {
     throw new ApiError(404, "User not found");
   }
 
   const exists = await query(
     "SELECT 1 FROM project_members WHERE project_id = $1 AND user_id = $2",
-    [projectId, user_id]
+    [projectId, targetUserId]
   );
 
   if (exists.rows.length) {
@@ -165,7 +182,7 @@ const addMember = async (projectId, userId, { user_id, role }) => {
     `INSERT INTO project_members (project_id, user_id, role)
      VALUES ($1, $2, $3)
      RETURNING *`,
-    [projectId, user_id, role]
+    [projectId, targetUserId, role]
   );
 
   return rows[0];

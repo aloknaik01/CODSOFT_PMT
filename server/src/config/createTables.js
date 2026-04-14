@@ -38,6 +38,7 @@ const migrate = async () => {
         status VARCHAR(20) DEFAULT 'active' 
           CHECK (status IN ('active', 'completed', 'archived')),
         due_date DATE DEFAULT NULL,
+        color VARCHAR(7) DEFAULT '#8b5cf6',
         owner_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
         created_at TIMESTAMP DEFAULT NOW(),
         updated_at TIMESTAMP DEFAULT NOW()
