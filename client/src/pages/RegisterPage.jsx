@@ -106,14 +106,14 @@ function StepIndicator({ current }) {
               style={{
                 background:
                   step.id < current
-                    ? "oklch(0.72 0.18 142)"
+                    ? "oklch(var(--chart-3))"
                     : step.id === current
-                      ? "linear-gradient(135deg, oklch(0.72 0.19 268), oklch(0.68 0.16 189))"
-                      : "oklch(0.18 0.01 268)",
-                color: step.id <= current ? "white" : "oklch(0.5 0 0)",
+                      ? "linear-gradient(135deg, oklch(var(--primary)), oklch(var(--accent)))"
+                      : "oklch(var(--muted))",
+                color: step.id <= current ? "white" : "oklch(var(--muted-foreground))",
                 boxShadow:
                   step.id === current
-                    ? "0 0 16px oklch(0.72 0.19 268 / 0.4)"
+                    ? "0 0 16px oklch(var(--primary) / 0.4)"
                     : "none",
               }}
             >
@@ -128,8 +128,8 @@ function StepIndicator({ current }) {
               style={{
                 color:
                   step.id === current
-                    ? "oklch(0.72 0.19 268)"
-                    : "oklch(0.45 0 0)",
+                    ? "oklch(var(--primary))"
+                    : "oklch(var(--muted-foreground))",
               }}
             >
               {step.label}
@@ -137,13 +137,9 @@ function StepIndicator({ current }) {
           </motion.div>
           {i < STEPS.length - 1 && (
             <div
-              className="h-px w-8 mb-4 rounded-full transition-all duration-500"
-              style={{
-                background:
-                  step.id < current
-                    ? "oklch(0.72 0.18 142)"
-                    : "oklch(0.22 0 0)",
-              }}
+              className={`h-px w-8 mb-4 rounded-full transition-all duration-500 ${
+                step.id < current ? "bg-emerald-500" : "bg-border"
+              }`}
             />
           )}
         </div>
@@ -251,42 +247,42 @@ export default function RegisterPage() {
   const inputClass = (field, hasError) =>
     `
     pl-10 h-12 rounded-xl border transition-all duration-200
-    bg-white/5 dark:bg-white/[0.03] backdrop-blur-sm
+    bg-background shadow-sm
     text-foreground placeholder:text-muted-foreground/50
     ${
       hasError
-        ? "border-destructive/70 shadow-[0_0_0_3px_oklch(0.62_0.2_27/0.15)]"
+        ? "border-destructive/70 shadow-[0_0_0_3px_oklch(var(--destructive)/0.15)]"
         : focusedField === field
-          ? "border-primary/60 shadow-[0_0_0_3px_oklch(0.72_0.19_268/0.18)] bg-white/[0.07]"
-          : "border-white/10 hover:border-white/20"
+          ? "border-primary/60 shadow-[0_0_0_3px_oklch(var(--primary)/0.18)] bg-primary/[0.03]"
+          : "border-border hover:border-border/80"
     }
   `.trim();
 
   return (
-    <div className="min-h-screen flex overflow-hidden">
+    <div className="min-h-screen flex overflow-hidden bg-background">
       {/* ── Left panel ─────────────────────────────────────────────────────── */}
       <div
-        className="hidden lg:flex lg:w-[52%] relative flex-col justify-between p-12 overflow-hidden"
+        className="hidden lg:flex lg:w-[52%] relative flex-col justify-between p-12 overflow-hidden border-r border-border/50"
         style={{
           background:
-            "linear-gradient(145deg, oklch(0.07 0.04 200) 0%, oklch(0.08 0.03 230) 50%, oklch(0.09 0.04 268) 100%)",
+            "linear-gradient(145deg, oklch(var(--auth-bg-left)) 0%, oklch(var(--background)) 50%, oklch(var(--auth-bg-right)) 100%)",
         }}
       >
         <AnimatedOrb
           className="-top-20 -right-20 w-[420px] h-[420px]"
-          color="oklch(0.68 0.16 189 / 0.3)"
+          color="oklch(var(--auth-orb-2))"
           delay={0}
         />
         <AnimatedOrb
           className="-bottom-24 -left-24 w-[500px] h-[500px]"
-          color="oklch(0.72 0.19 268 / 0.22)"
+          color="oklch(var(--auth-orb-1))"
           delay={3}
         />
         <div
-          className="absolute inset-0 pointer-events-none opacity-[0.03]"
+          className="absolute inset-0 pointer-events-none opacity-[0.05] dark:opacity-[0.03]"
           style={{
             backgroundImage:
-              "radial-gradient(circle, white 1px, transparent 1px)",
+              "radial-gradient(circle, currentColor 1px, transparent 1px)",
             backgroundSize: "28px 28px",
           }}
         />
@@ -299,7 +295,7 @@ export default function RegisterPage() {
           className="flex items-center gap-3 relative z-10"
         >
           <LogoMark size={44} />
-          <span className="text-2xl font-display font-bold text-white tracking-tight">
+          <span className="text-2xl font-display font-bold text-foreground tracking-tight">
             {APP_NAME}
           </span>
         </motion.div>
@@ -314,21 +310,19 @@ export default function RegisterPage() {
           <div className="space-y-4">
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-accent/30 bg-accent/10 backdrop-blur-sm">
               <span
-                className="w-1.5 h-1.5 rounded-full"
-                style={{ background: "oklch(0.72 0.2 189)" }}
+                className="w-1.5 h-1.5 rounded-full bg-accent"
               />
               <span
-                className="text-xs font-medium"
-                style={{ color: "oklch(0.8 0.15 189)" }}
+                className="text-xs font-medium text-accent"
               >
                 Free forever for small teams
               </span>
             </div>
-            <h1 className="text-5xl xl:text-6xl font-display font-bold leading-[1.1] text-white">
+            <h1 className="text-5xl xl:text-6xl font-display font-bold leading-[1.1] text-foreground">
               Your team's new{" "}
               <span className="gradient-text-hero">superpower</span>
             </h1>
-            <p className="text-sm text-white/55 leading-relaxed max-w-sm">
+            <p className="text-sm text-muted-foreground leading-relaxed max-w-sm">
               Join thousands of teams who ship faster, collaborate better, and
               stress less with {APP_NAME}.
             </p>
@@ -347,7 +341,7 @@ export default function RegisterPage() {
                 <p className="text-2xl font-display font-bold gradient-text">
                   {s.value}
                 </p>
-                <p className="text-xs text-white/50 mt-1">{s.label}</p>
+                <p className="text-xs text-muted-foreground mt-1">{s.label}</p>
               </motion.div>
             ))}
           </div>
@@ -372,8 +366,8 @@ export default function RegisterPage() {
                   <p.icon className="w-4.5 h-4.5" style={{ color: p.color }} />
                 </div>
                 <div>
-                  <p className="text-sm font-semibold text-white">{p.title}</p>
-                  <p className="text-xs text-white/50 mt-0.5 leading-relaxed">
+                  <p className="text-sm font-semibold text-foreground/90">{p.title}</p>
+                  <p className="text-xs text-muted-foreground mt-0.5 leading-relaxed">
                     {p.desc}
                   </p>
                 </div>
@@ -390,21 +384,17 @@ export default function RegisterPage() {
           className="relative z-10 glass-card p-5 flex items-center gap-4 border-l-2 border-accent/50"
         >
           <div
-            className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
-            style={{
-              background: "oklch(0.72 0.2 189 / 0.15)",
-            }}
+            className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 bg-accent/10"
           >
             <Sparkles
-              className="w-5 h-5"
-              style={{ color: "oklch(0.72 0.2 189)" }}
+              className="w-5 h-5 text-accent"
             />
           </div>
           <div>
-            <p className="text-sm font-semibold text-white">
+            <p className="text-sm font-semibold text-foreground">
               Free forever for small teams
             </p>
-            <p className="text-xs text-white/50 mt-0.5">
+            <p className="text-xs text-muted-foreground mt-0.5">
               Up to 5 members, 10 projects. No credit card required.
             </p>
           </div>
@@ -416,7 +406,7 @@ export default function RegisterPage() {
         className="flex-1 flex items-center justify-center p-6 sm:p-10 relative overflow-hidden"
         style={{
           background:
-            "linear-gradient(160deg, oklch(0.1 0.02 200) 0%, oklch(0.08 0.01 240) 100%)",
+            "linear-gradient(160deg, oklch(var(--auth-bg-right)) 0%, oklch(var(--background)) 100%)",
         }}
       >
         <div
@@ -435,12 +425,7 @@ export default function RegisterPage() {
           className="w-full max-w-md relative z-10"
         >
           <div
-            className="rounded-2xl border border-white/10 p-8 backdrop-blur-xl space-y-6"
-            style={{
-              background: "oklch(0.12 0.01 220 / 0.8)",
-              boxShadow:
-                "0 0 0 1px oklch(0.68 0.16 189 / 0.08), 0 32px 64px -12px oklch(0 0 0 / 0.5), 0 0 60px -10px oklch(0.68 0.16 189 / 0.08)",
-            }}
+            className="rounded-2xl border border-border/50 p-8 backdrop-blur-xl space-y-6 glass-card"
           >
             {/* Mobile logo */}
             <motion.div
@@ -450,7 +435,7 @@ export default function RegisterPage() {
               className="flex lg:hidden items-center gap-3 justify-center"
             >
               <LogoMark size={36} />
-              <span className="text-xl font-display font-bold text-white">
+              <span className="text-xl font-display font-bold text-foreground">
                 {APP_NAME}
               </span>
             </motion.div>
@@ -462,10 +447,10 @@ export default function RegisterPage() {
               transition={{ duration: 0.45, delay: 0.15 }}
               className="space-y-1.5"
             >
-              <h2 className="text-2xl font-display font-bold text-white">
+              <h2 className="text-2xl font-display font-bold text-foreground">
                 Create your account
               </h2>
-              <p className="text-sm text-white/45">
+              <p className="text-sm text-muted-foreground">
                 Start your 14-day free trial — no credit card required.
               </p>
             </motion.div>
@@ -499,7 +484,7 @@ export default function RegisterPage() {
                     <div className="space-y-1.5">
                       <Label
                         htmlFor="reg-name"
-                        className="text-xs font-semibold text-white/60 uppercase tracking-wider"
+                        className="text-xs font-semibold text-muted-foreground uppercase tracking-wider"
                       >
                         Full name
                       </Label>
@@ -509,8 +494,8 @@ export default function RegisterPage() {
                           style={{
                             color:
                               focusedField === "name"
-                                ? "oklch(0.72 0.19 268)"
-                                : "oklch(0.6 0 0)",
+                                ? "oklch(var(--primary))"
+                                : "oklch(var(--muted-foreground))",
                           }}
                         />
                         <Input
@@ -548,7 +533,7 @@ export default function RegisterPage() {
                     <div className="space-y-1.5">
                       <Label
                         htmlFor="reg-email"
-                        className="text-xs font-semibold text-white/60 uppercase tracking-wider"
+                        className="text-xs font-semibold text-muted-foreground uppercase tracking-wider"
                       >
                         Work email
                       </Label>
@@ -558,8 +543,8 @@ export default function RegisterPage() {
                           style={{
                             color:
                               focusedField === "email"
-                                ? "oklch(0.72 0.19 268)"
-                                : "oklch(0.6 0 0)",
+                                ? "oklch(var(--primary))"
+                                : "oklch(var(--muted-foreground))",
                           }}
                         />
                         <Input
@@ -608,7 +593,7 @@ export default function RegisterPage() {
                     <div className="space-y-1.5">
                       <Label
                         htmlFor="reg-password"
-                        className="text-xs font-semibold text-white/60 uppercase tracking-wider"
+                        className="text-xs font-semibold text-muted-foreground uppercase tracking-wider"
                       >
                         Password
                       </Label>
@@ -618,8 +603,8 @@ export default function RegisterPage() {
                           style={{
                             color:
                               focusedField === "password"
-                                ? "oklch(0.72 0.19 268)"
-                                : "oklch(0.6 0 0)",
+                                ? "oklch(var(--primary))"
+                                : "oklch(var(--muted-foreground))",
                           }}
                         />
                         <Input
@@ -640,7 +625,7 @@ export default function RegisterPage() {
                         <button
                           type="button"
                           onClick={() => setShowPass((v) => !v)}
-                          className="absolute right-3.5 top-1/2 -translate-y-1/2 text-white/30 hover:text-white/70 transition-colors duration-150"
+                          className="absolute right-3.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors duration-150"
                           aria-label={
                             showPass ? "Hide password" : "Show password"
                           }
@@ -666,7 +651,7 @@ export default function RegisterPage() {
                                   background:
                                     i <= strength
                                       ? strengthColors[strength]
-                                      : "oklch(0.22 0 0)",
+                                      : "oklch(var(--muted))",
                                 }}
                               />
                             ))}
@@ -677,7 +662,7 @@ export default function RegisterPage() {
                               color:
                                 strength > 0
                                   ? strengthColors[strength]
-                                  : "oklch(0.5 0 0)",
+                                  : "oklch(var(--muted-foreground))",
                             }}
                           >
                             {strengthLabels[strength]}
@@ -703,7 +688,7 @@ export default function RegisterPage() {
                     <div className="space-y-1.5">
                       <Label
                         htmlFor="reg-confirm"
-                        className="text-xs font-semibold text-white/60 uppercase tracking-wider"
+                        className="text-xs font-semibold text-muted-foreground uppercase tracking-wider"
                       >
                         Confirm password
                       </Label>
@@ -713,8 +698,8 @@ export default function RegisterPage() {
                           style={{
                             color:
                               focusedField === "confirm"
-                                ? "oklch(0.72 0.19 268)"
-                                : "oklch(0.6 0 0)",
+                                ? "oklch(var(--primary))"
+                                : "oklch(var(--muted-foreground))",
                           }}
                         />
                         <Input
@@ -735,7 +720,7 @@ export default function RegisterPage() {
                         <button
                           type="button"
                           onClick={() => setShowConfirm((v) => !v)}
-                          className="absolute right-3.5 top-1/2 -translate-y-1/2 text-white/30 hover:text-white/70 transition-colors duration-150"
+                          className="absolute right-3.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors duration-150"
                           aria-label={
                             showConfirm ? "Hide password" : "Show password"
                           }
@@ -775,30 +760,29 @@ export default function RegisterPage() {
                   >
                     {/* Review summary */}
                     <div
-                      className="rounded-xl p-4 space-y-3 border border-white/10"
-                      style={{ background: "oklch(0.15 0.01 268 / 0.5)" }}
+                      className="rounded-xl p-4 space-y-3 border border-border/50 bg-muted/30"
                     >
-                      <p className="text-xs font-semibold text-white/50 uppercase tracking-wider">
+                      <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
                         Account summary
                       </p>
                       <div className="space-y-2">
                         <div className="flex items-center justify-between">
-                          <span className="text-xs text-white/40">Name</span>
-                          <span className="text-sm font-medium text-white">
+                          <span className="text-xs text-muted-foreground">Name</span>
+                          <span className="text-sm font-medium text-foreground">
                             {name}
                           </span>
                         </div>
                         <div className="flex items-center justify-between">
-                          <span className="text-xs text-white/40">Email</span>
-                          <span className="text-sm font-medium text-white truncate max-w-[180px]">
+                          <span className="text-xs text-muted-foreground">Email</span>
+                          <span className="text-sm font-medium text-foreground truncate max-w-[180px]">
                             {email}
                           </span>
                         </div>
                         <div className="flex items-center justify-between">
-                          <span className="text-xs text-white/40">
+                          <span className="text-xs text-muted-foreground">
                             Password
                           </span>
-                          <span className="text-sm font-medium text-white">
+                          <span className="text-sm font-medium text-foreground">
                             {"•".repeat(Math.min(password.length, 10))}
                           </span>
                         </div>
@@ -820,11 +804,11 @@ export default function RegisterPage() {
                           data-ocid="register-terms"
                           checked={terms}
                           onCheckedChange={(v) => setTerms(!!v)}
-                          className="mt-0.5 border-white/20 data-[state=checked]:bg-primary data-[state=checked]:border-primary"
+                          className="mt-0.5 border-border data-[state=checked]:bg-primary data-[state=checked]:border-primary"
                         />
                         <Label
                           htmlFor="reg-terms"
-                          className="text-sm text-white/50 cursor-pointer leading-relaxed"
+                          className="text-sm text-muted-foreground cursor-pointer leading-relaxed"
                         >
                           I agree to the{" "}
                           <span className="text-primary hover:underline cursor-pointer underline-offset-2">
@@ -863,7 +847,7 @@ export default function RegisterPage() {
                     type="button"
                     variant="outline"
                     onClick={() => setStep((s) => s - 1)}
-                    className="flex-1 h-12 rounded-xl border-white/15 text-white/60 hover:text-white hover:border-white/25 bg-white/5 hover:bg-white/10 transition-all duration-200"
+                    className="flex-1 h-12 rounded-xl border-border text-muted-foreground hover:text-foreground hover:bg-muted transition-all duration-200"
                   >
                     Back
                   </Button>
@@ -923,7 +907,7 @@ export default function RegisterPage() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.4, delay: 0.5 }}
-              className="text-center text-sm text-white/40"
+              className="text-center text-sm text-muted-foreground"
             >
               Already using {APP_NAME}?{" "}
               <Link

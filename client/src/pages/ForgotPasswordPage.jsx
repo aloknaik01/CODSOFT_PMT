@@ -6,6 +6,7 @@ import { ArrowLeft, ArrowRight, CheckCircle2, Mail, Send } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useState } from "react";
 import { apiForgotPassword } from "../services/api";
+import { APP_NAME } from "../constants";
 
 function AnimatedOrb({ className, color, delay = 0 }) {
   return (
@@ -72,46 +73,46 @@ export default function ForgotPasswordPage() {
 
   const inputClass = `
     pl-10 h-12 rounded-xl border transition-all duration-200
-    bg-white/5 dark:bg-white/[0.03] backdrop-blur-sm
+    bg-background shadow-sm
     text-foreground placeholder:text-muted-foreground/50
     ${
       emailError
-        ? "border-destructive/70 shadow-[0_0_0_3px_oklch(0.62_0.2_27/0.15)]"
+        ? "border-destructive/70 shadow-[0_0_0_3px_oklch(var(--destructive)/0.15)]"
         : focusedField
-          ? "border-primary/60 shadow-[0_0_0_3px_oklch(0.72_0.19_268/0.18)] bg-white/[0.07]"
-          : "border-white/10 hover:border-white/20"
+          ? "border-primary/60 shadow-[0_0_0_3px_oklch(var(--primary)/0.18)] bg-primary/[0.03]"
+          : "border-border hover:border-border/80"
     }
   `.trim();
 
   return (
     <div
-      className="min-h-screen flex items-center justify-center p-6 relative overflow-hidden"
+      className="min-h-screen flex items-center justify-center p-6 relative overflow-hidden bg-background"
       style={{
         background:
-          "linear-gradient(160deg, oklch(0.1 0.02 268) 0%, oklch(0.08 0.01 268) 100%)",
+          "linear-gradient(160deg, oklch(var(--auth-bg-right)) 0%, oklch(var(--background)) 100%)",
       }}
     >
       <AnimatedOrb
         className="-top-32 -left-24 w-[500px] h-[500px]"
-        color="oklch(0.72 0.19 268 / 0.25)"
+        color="oklch(var(--auth-orb-1))"
         delay={0}
       />
       <AnimatedOrb
         className="bottom-10 right-0 w-96 h-96"
-        color="oklch(0.68 0.16 189 / 0.2)"
+        color="oklch(var(--auth-orb-2))"
         delay={2}
       />
       <AnimatedOrb
         className="top-1/2 left-1/3 w-64 h-64"
-        color="oklch(0.72 0.19 268 / 0.1)"
+        color="oklch(var(--auth-orb-1) / 0.4)"
         delay={4}
       />
 
       <div
-        className="absolute inset-0 pointer-events-none opacity-[0.03]"
+        className="absolute inset-0 pointer-events-none opacity-[0.05] dark:opacity-[0.03]"
         style={{
           backgroundImage:
-            "radial-gradient(circle, white 1px, transparent 1px)",
+            "radial-gradient(circle, currentColor 1px, transparent 1px)",
           backgroundSize: "28px 28px",
         }}
       />
@@ -130,19 +131,14 @@ export default function ForgotPasswordPage() {
           className="flex items-center gap-3 justify-center mb-8"
         >
           <LogoMark size={40} />
-          <span className="text-2xl font-display font-bold text-white tracking-tight">
-            Task<span className="gradient-text">Flow</span>
+          <span className="text-2xl font-display font-bold text-foreground tracking-tight">
+            {APP_NAME}
           </span>
         </motion.div>
 
         {/* Card */}
         <div
-          className="rounded-2xl border border-white/10 p-8 backdrop-blur-xl space-y-7"
-          style={{
-            background: "oklch(0.12 0.01 268 / 0.8)",
-            boxShadow:
-              "0 0 0 1px oklch(0.72 0.19 268 / 0.08), 0 32px 64px -12px oklch(0 0 0 / 0.5), 0 0 60px -10px oklch(0.72 0.19 268 / 0.08)",
-          }}
+          className="rounded-2xl border border-border/50 p-8 backdrop-blur-xl space-y-7 glass-card"
         >
           <AnimatePresence mode="wait">
             {isSuccess ? (
@@ -165,24 +161,18 @@ export default function ForgotPasswordPage() {
                     damping: 20,
                     delay: 0.1,
                   }}
-                  className="w-20 h-20 rounded-full flex items-center justify-center mx-auto"
-                  style={{
-                    background:
-                      "linear-gradient(135deg, oklch(0.72 0.19 268 / 0.2), oklch(0.68 0.16 189 / 0.2))",
-                    border: "1px solid oklch(0.72 0.19 268 / 0.3)",
-                  }}
+                  className="w-20 h-20 rounded-full flex items-center justify-center mx-auto bg-primary/10 border border-primary/20"
                 >
                   <Send
-                    className="w-8 h-8"
-                    style={{ color: "oklch(0.72 0.19 268)" }}
+                    className="w-8 h-8 text-primary"
                   />
                 </motion.div>
 
                 <div className="space-y-2">
-                  <h2 className="text-2xl font-display font-bold text-white">
+                  <h2 className="text-2xl font-display font-bold text-foreground">
                     Check your email
                   </h2>
-                  <p className="text-sm text-white/50 leading-relaxed">
+                  <p className="text-sm text-muted-foreground leading-relaxed">
                     We sent a password reset link to{" "}
                     <span className="text-primary font-medium">{email}</span>.
                     Check your inbox and follow the instructions.
@@ -190,13 +180,9 @@ export default function ForgotPasswordPage() {
                 </div>
 
                 <div
-                  className="rounded-xl px-4 py-3 border text-xs text-white/40 text-left"
-                  style={{
-                    background: "oklch(0.16 0.01 268 / 0.5)",
-                    borderColor: "oklch(0.72 0.19 268 / 0.15)",
-                  }}
+                  className="rounded-xl px-4 py-3 border border-primary/10 text-xs text-muted-foreground text-left bg-muted/30"
                 >
-                  <strong className="text-white/60">Didn't receive it?</strong>{" "}
+                  <strong className="text-foreground/80">Didn't receive it?</strong>{" "}
                   Check your spam folder or{" "}
                   <button
                     type="button"
@@ -246,21 +232,16 @@ export default function ForgotPasswordPage() {
                   className="space-y-2"
                 >
                   <div
-                    className="w-12 h-12 rounded-xl flex items-center justify-center mb-4"
-                    style={{
-                      background: "oklch(0.72 0.19 268 / 0.15)",
-                      border: "1px solid oklch(0.72 0.19 268 / 0.25)",
-                    }}
+                    className="w-12 h-12 rounded-xl flex items-center justify-center mb-4 bg-primary/10 border border-primary/25"
                   >
                     <Mail
-                      className="w-5 h-5"
-                      style={{ color: "oklch(0.72 0.19 268)" }}
+                      className="w-5 h-5 text-primary"
                     />
                   </div>
-                  <h2 className="text-2xl font-display font-bold text-white">
+                  <h2 className="text-2xl font-display font-bold text-foreground">
                     Forgot your password?
                   </h2>
-                  <p className="text-sm text-white/45 leading-relaxed">
+                  <p className="text-sm text-muted-foreground leading-relaxed">
                     No worries — enter your email and we'll send you a reset
                     link.
                   </p>
@@ -280,7 +261,7 @@ export default function ForgotPasswordPage() {
                   >
                     <Label
                       htmlFor="email"
-                      className="text-xs font-semibold text-white/60 uppercase tracking-wider"
+                      className="text-xs font-semibold text-muted-foreground uppercase tracking-wider"
                     >
                       Email address
                     </Label>
@@ -289,8 +270,8 @@ export default function ForgotPasswordPage() {
                         className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none transition-colors duration-200"
                         style={{
                           color: focusedField
-                            ? "oklch(0.72 0.19 268)"
-                            : "oklch(0.6 0 0)",
+                            ? "oklch(var(--primary))"
+                            : "oklch(var(--muted-foreground))",
                         }}
                       />
                       <Input
@@ -378,7 +359,7 @@ export default function ForgotPasswordPage() {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ duration: 0.4, delay: 0.38 }}
-                  className="text-center text-sm text-white/40"
+                  className="text-center text-sm text-muted-foreground"
                 >
                   <Link
                     to="/login"

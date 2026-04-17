@@ -126,50 +126,50 @@ export default function LoginPage() {
   const inputClass = (field, hasError) =>
     `
     pl-10 h-12 rounded-xl border transition-all duration-200
-    bg-white/5 dark:bg-white/[0.03] backdrop-blur-sm
+    bg-background shadow-sm
     text-foreground placeholder:text-muted-foreground/50
     ${
       hasError
-        ? "border-destructive/70 shadow-[0_0_0_3px_oklch(0.62_0.2_27/0.15)]"
+        ? "border-destructive/70 shadow-[0_0_0_3px_oklch(var(--destructive)/0.15)]"
         : focusedField === field
-          ? "border-primary/60 shadow-[0_0_0_3px_oklch(0.72_0.19_268/0.18)] bg-white/[0.07]"
-          : "border-white/10 hover:border-white/20"
+          ? "border-primary/60 shadow-[0_0_0_3px_oklch(var(--primary)/0.18)] bg-primary/[0.03]"
+          : "border-border hover:border-border/80"
     }
   `.trim();
 
   return (
-    <div className="min-h-screen flex overflow-hidden">
+    <div className="min-h-screen flex overflow-hidden bg-background">
       {/* ── Left panel ─────────────────────────────────────────────────────── */}
       <div
-        className="hidden lg:flex lg:w-[52%] relative flex-col justify-between p-12 overflow-hidden"
+        className="hidden lg:flex lg:w-[52%] relative flex-col justify-between p-12 overflow-hidden border-r border-border/50"
         style={{
           background:
-            "linear-gradient(145deg, oklch(0.09 0.04 275) 0%, oklch(0.07 0.03 255) 50%, oklch(0.06 0.04 200) 100%)",
+            "linear-gradient(145deg, oklch(var(--auth-bg-left)) 0%, oklch(var(--background)) 50%, oklch(var(--auth-bg-right)) 100%)",
         }}
       >
         {/* Animated orbs */}
         <AnimatedOrb
           className="-top-32 -left-24 w-[500px] h-[500px]"
-          color="oklch(0.72 0.19 268 / 0.3)"
+          color="oklch(var(--auth-orb-1))"
           delay={0}
         />
         <AnimatedOrb
           className="bottom-10 right-0 w-96 h-96"
-          color="oklch(0.68 0.16 189 / 0.25)"
+          color="oklch(var(--auth-orb-2))"
           delay={2}
         />
         <AnimatedOrb
           className="top-1/2 left-1/3 w-64 h-64"
-          color="oklch(0.72 0.19 268 / 0.12)"
+          color="oklch(var(--auth-orb-1) / 0.4)"
           delay={4}
         />
 
         {/* Fine grid overlay */}
         <div
-          className="absolute inset-0 pointer-events-none opacity-[0.03]"
+          className="absolute inset-0 pointer-events-none opacity-[0.05] dark:opacity-[0.03]"
           style={{
             backgroundImage:
-              "radial-gradient(circle, white 1px, transparent 1px)",
+              "radial-gradient(circle, currentColor 1px, transparent 1px)",
             backgroundSize: "28px 28px",
           }}
         />
@@ -182,7 +182,7 @@ export default function LoginPage() {
           className="flex items-center gap-3 relative z-10"
         >
           <LogoMark size={44} />
-          <span className="text-2xl font-display font-bold text-white tracking-tight">
+          <span className="text-2xl font-display font-bold text-foreground tracking-tight">
             {APP_NAME}
           </span>
         </motion.div>
@@ -197,18 +197,17 @@ export default function LoginPage() {
           <div className="space-y-4">
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-primary/30 bg-primary/10 backdrop-blur-sm">
               <span
-                className="w-1.5 h-1.5 rounded-full"
-                style={{ background: "oklch(0.72 0.19 268)" }}
+                className="w-1.5 h-1.5 rounded-full bg-primary"
               />
               <span className="text-xs font-medium text-primary/90">
                 Trusted by 50,000+ teams worldwide
               </span>
             </div>
-            <h1 className="text-5xl xl:text-6xl font-display font-bold leading-[1.1] text-white">
+            <h1 className="text-5xl xl:text-6xl font-display font-bold leading-[1.1] text-foreground">
               Ship projects{" "}
               <span className="gradient-text-hero">faster than ever</span>
             </h1>
-            <p className="text-base text-white/55 leading-relaxed max-w-sm">
+            <p className="text-base text-muted-foreground leading-relaxed max-w-sm">
               The all-in-one project management platform built for modern teams.
             </p>
           </div>
@@ -232,8 +231,8 @@ export default function LoginPage() {
                   <f.icon className="w-4.5 h-4.5" style={{ color: f.color }} />
                 </div>
                 <div>
-                  <p className="text-sm font-semibold text-white">{f.title}</p>
-                  <p className="text-xs text-white/50 mt-0.5 leading-relaxed">
+                  <p className="text-sm font-semibold text-foreground/90">{f.title}</p>
+                  <p className="text-xs text-muted-foreground mt-0.5 leading-relaxed">
                     {f.desc}
                   </p>
                 </div>
@@ -247,16 +246,16 @@ export default function LoginPage() {
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.55, delay: 0.65 }}
-          className="relative z-10 glass-card p-5 space-y-3 border-l-2 border-primary/50"
+          className="relative z-10 glass-card p-5 space-y-3"
         >
           <div className="flex gap-1 mb-1">
             {["s1", "s2", "s3", "s4", "s5"].map((k) => (
-              <span key={k} className="text-amber-400 text-xs">
+              <span key={k} className="text-amber-500 text-xs">
                 ★
               </span>
             ))}
           </div>
-          <p className="text-sm text-white/70 italic leading-relaxed">
+          <p className="text-sm text-foreground/80 italic leading-relaxed">
             "{APP_NAME} cut our sprint planning time in half and made our remote
             team feel like they're in the same room."
           </p>
@@ -271,8 +270,8 @@ export default function LoginPage() {
               SJ
             </div>
             <div>
-              <p className="text-xs font-semibold text-white">Sarah Johnson</p>
-              <p className="text-xs text-white/40">VP Engineering, Vercel</p>
+              <p className="text-xs font-semibold text-foreground">Sarah Johnson</p>
+              <p className="text-xs text-muted-foreground">VP Engineering, Vercel</p>
             </div>
           </div>
         </motion.blockquote>
@@ -283,7 +282,7 @@ export default function LoginPage() {
         className="flex-1 flex items-center justify-center p-6 sm:p-10 relative overflow-hidden"
         style={{
           background:
-            "linear-gradient(160deg, oklch(0.1 0.02 268) 0%, oklch(0.08 0.01 268) 100%)",
+            "linear-gradient(160deg, oklch(var(--auth-bg-right)) 0%, oklch(var(--background)) 100%)",
         }}
       >
         {/* Subtle bg orb for right panel */}
@@ -304,12 +303,7 @@ export default function LoginPage() {
         >
           {/* Card container */}
           <div
-            className="rounded-2xl border border-white/10 p-8 backdrop-blur-xl space-y-7"
-            style={{
-              background: "oklch(0.12 0.01 268 / 0.8)",
-              boxShadow:
-                "0 0 0 1px oklch(0.72 0.19 268 / 0.08), 0 32px 64px -12px oklch(0 0 0 / 0.5), 0 0 60px -10px oklch(0.72 0.19 268 / 0.08)",
-            }}
+            className="rounded-2xl border border-border/50 p-8 backdrop-blur-xl space-y-7 glass-card"
           >
             {/* Mobile logo */}
             <motion.div
@@ -319,7 +313,7 @@ export default function LoginPage() {
               className="flex lg:hidden items-center gap-3 justify-center"
             >
               <LogoMark size={36} />
-              <span className="text-xl font-display font-bold text-white">
+              <span className="text-xl font-display font-bold text-foreground">
                 {APP_NAME}
               </span>
             </motion.div>
@@ -331,10 +325,10 @@ export default function LoginPage() {
               transition={{ duration: 0.45, delay: 0.15 }}
               className="space-y-1.5"
             >
-              <h2 className="text-2xl font-display font-bold text-white">
+              <h2 className="text-2xl font-display font-bold text-foreground">
                 Welcome back
               </h2>
-              <p className="text-sm text-white/45">
+              <p className="text-sm text-muted-foreground">
                 Sign in to continue to your workspace
               </p>
             </motion.div>
@@ -355,7 +349,7 @@ export default function LoginPage() {
               >
                 <Label
                   htmlFor="email"
-                  className="text-xs font-semibold text-white/60 uppercase tracking-wider"
+                  className="text-xs font-semibold text-muted-foreground uppercase tracking-wider"
                 >
                   Email address
                 </Label>
@@ -365,8 +359,8 @@ export default function LoginPage() {
                     style={{
                       color:
                         focusedField === "email"
-                          ? "oklch(0.72 0.19 268)"
-                          : "oklch(0.6 0 0)",
+                          ? "oklch(var(--primary))"
+                          : "oklch(var(--muted-foreground))",
                     }}
                   />
                   <Input
@@ -410,7 +404,7 @@ export default function LoginPage() {
                 <div className="flex items-center justify-between">
                   <Label
                     htmlFor="password"
-                    className="text-xs font-semibold text-white/60 uppercase tracking-wider"
+                    className="text-xs font-semibold text-muted-foreground uppercase tracking-wider"
                   >
                     Password
                   </Label>
@@ -428,8 +422,8 @@ export default function LoginPage() {
                     style={{
                       color:
                         focusedField === "password"
-                          ? "oklch(0.72 0.19 268)"
-                          : "oklch(0.6 0 0)",
+                          ? "oklch(var(--primary))"
+                          : "oklch(var(--muted-foreground))",
                     }}
                   />
                   <Input
@@ -450,7 +444,7 @@ export default function LoginPage() {
                   <button
                     type="button"
                     onClick={() => setShowPass((v) => !v)}
-                    className="absolute right-3.5 top-1/2 -translate-y-1/2 text-white/30 hover:text-white/70 transition-colors duration-150"
+                    className="absolute right-3.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors duration-150"
                     aria-label={showPass ? "Hide password" : "Show password"}
                   >
                     {showPass ? (
@@ -487,11 +481,11 @@ export default function LoginPage() {
                   data-ocid="checkbox-remember"
                   checked={remember}
                   onCheckedChange={(v) => setRemember(!!v)}
-                  className="border-white/20 data-[state=checked]:bg-primary data-[state=checked]:border-primary"
+                  className="border-border data-[state=checked]:bg-primary data-[state=checked]:border-primary"
                 />
                 <Label
                   htmlFor="remember"
-                  className="text-sm text-white/45 cursor-pointer"
+                  className="text-sm text-muted-foreground cursor-pointer"
                 >
                   Remember me for 30 days
                 </Label>
@@ -554,7 +548,7 @@ export default function LoginPage() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.4, delay: 0.5 }}
-              className="text-center text-sm text-white/40"
+              className="text-center text-sm text-muted-foreground"
             >
               No account yet?{" "}
               <Link

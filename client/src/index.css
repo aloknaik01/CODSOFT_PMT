@@ -48,6 +48,14 @@
     --sidebar-accent-foreground: 0.12 0 0;
     --sidebar-border: 0.88 0 0;
     --sidebar-ring: 0.58 0.08 278;
+
+    /* Auth Page Specifics */
+    --auth-bg-left: 0.96 0.02 275;
+    --auth-bg-right: 0.98 0 0;
+    --auth-card-bg: 1 0 0;
+    --auth-text-dim: 0.45 0 0;
+    --auth-orb-1: 0.72 0.19 268 / 0.15;
+    --auth-orb-2: 0.68 0.16 189 / 0.12;
   }
 
   .dark {
@@ -90,6 +98,14 @@
     --sidebar-accent-foreground: 0.92 0 0;
     --sidebar-border: 0.22 0 0;
     --sidebar-ring: 0.72 0.19 268;
+
+    /* Auth Page Specifics */
+    --auth-bg-left: 0.08 0.03 255;
+    --auth-bg-right: 0.06 0.02 268;
+    --auth-card-bg: 0.12 0.01 268;
+    --auth-text-dim: 0.6 0 0;
+    --auth-orb-1: 0.72 0.19 268 / 0.3;
+    --auth-orb-2: 0.68 0.16 189 / 0.25;
   }
 
   * {
