@@ -68,9 +68,9 @@ function LogoMark({ size = 40 }) {
       whileHover={{ scale: 1.08 }}
       transition={{ type: "spring", stiffness: 400, damping: 17 }}
     >
-      <img 
-        src="/LumoPng.png" 
-        alt="Lumo Logo" 
+      <img
+        src="/LumoPng.png"
+        alt="Lumo Logo"
         style={{ width: size, height: 'auto' }}
         className="object-contain"
       />
@@ -128,13 +128,12 @@ export default function LoginPage() {
     pl-10 h-12 rounded-xl border transition-all duration-200
     bg-background shadow-sm
     text-foreground placeholder:text-muted-foreground/50
-    ${
-      hasError
+    ${hasError
         ? "border-destructive/70 shadow-[0_0_0_3px_oklch(var(--destructive)/0.15)]"
         : focusedField === field
           ? "border-primary/60 shadow-[0_0_0_3px_oklch(var(--primary)/0.18)] bg-primary/[0.03]"
           : "border-border hover:border-border/80"
-    }
+      }
   `.trim();
 
   return (
@@ -179,9 +178,9 @@ export default function LoginPage() {
           initial={{ opacity: 0, y: -16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="flex items-center gap-3 relative z-10"
+          className="flex items-center -gap-12 relative z-10"
         >
-          <LogoMark size={44} />
+          <LogoMark size={80} />
           <span className="text-2xl font-display font-bold text-foreground tracking-tight">
             {APP_NAME}
           </span>
